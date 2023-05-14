@@ -20,7 +20,7 @@
 
       FSCTL_GET_REPARSE_POINT is not exported with WIN32_LEAN_AND_MEAN. */
 #  include <windows.h>
-#  include <pathcch.h>
+#  include <shlwapi.h>
 #endif
 
 #ifdef __VXWORKS__
@@ -4420,6 +4420,14 @@ exit:
     return result;
 }
 
+HRESULT WINAPI _PathCchSkipRoot(LPWSTR lpszPath, LPWSTR* lppszRootEnd)
+{
+    LPWSTR const lpszRootEnd = PathSkipRootW(lpszPath);
+
+    lppszRootEnd[0] = lpszRootEnd;
+
+    return lpszRootEnd!=NULL ? S_OK : E_FAIL;
+}
 
 /*[clinic input]
 os._path_splitroot
@@ -4448,7 +4456,7 @@ os__path_splitroot_impl(PyObject *module, path_t *path)
     }
 
     Py_BEGIN_ALLOW_THREADS
-    ret = PathCchSkipRoot(buffer, &end);
+    ret = _PathCchSkipRoot(buffer, &end);
     Py_END_ALLOW_THREADS
     if (FAILED(ret)) {
         result = Py_BuildValue("sO", "", path->object);

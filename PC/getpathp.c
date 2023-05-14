@@ -90,7 +90,7 @@
 #endif
 
 #include <windows.h>
-#include <pathcch.h>
+#include <shlwapi.h>
 
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
@@ -238,6 +238,41 @@ ismodule(wchar_t *filename, int update_filename)
     return 0;
 }
 
+HRESULT WINAPI _PathCchCombineEx(LPWSTR lpszPathOut, size_t cchPathOut, LPCWSTR lpszPathIn, LPCWSTR lpszMore, ULONG dwFlags)
+{
+    WCHAR szPath[MAX_PATH];
+
+    if(PathCombineW(szPath, lpszPathIn, lpszMore))
+    {
+        if(wcslen(szPath)>=cchPathOut)
+        {
+            return E_FAIL;
+        }
+
+        wcscpy(lpszPathOut, szPath);
+        return S_OK;
+    }
+
+    return E_FAIL;
+}
+
+HRESULT WINAPI _PathCchCanonicalizeEx(LPWSTR lpszPathOut, size_t cchPathOut, LPCWSTR lpszPathIn, ULONG dwFlags)
+{
+    WCHAR szPath[MAX_PATH];
+
+    if(PathCanonicalizeW(szPath, lpszPathIn))
+    {
+        if(wcslen(szPath)>=cchPathOut)
+        {
+            return E_FAIL;
+        }
+
+        wcscpy(lpszPathOut, szPath);
+        return S_OK;
+    }
+
+    return E_FAIL;
+}
 
 /* Add a path component, by appending stuff to buffer.
    buffer must have at least MAXPATHLEN + 1 bytes allocated, and contain a
@@ -252,7 +287,7 @@ ismodule(wchar_t *filename, int update_filename)
 static void
 join(wchar_t *buffer, const wchar_t *stuff)
 {
-    if (FAILED(PathCchCombineEx(buffer, MAXPATHLEN+1, buffer, stuff, 0))) {
+    if (FAILED(_PathCchCombineEx(buffer, MAXPATHLEN+1, buffer, stuff, 0))) {
         Py_FatalError("buffer overflow in getpathp.c's join()");
     }
 }
@@ -266,7 +301,7 @@ canonicalize(wchar_t *buffer, const wchar_t *path)
         return _PyStatus_NO_MEMORY();
     }
 
-    if (FAILED(PathCchCanonicalizeEx(buffer, MAXPATHLEN + 1, path, 0))) {
+    if (FAILED(_PathCchCanonicalizeEx(buffer, MAXPATHLEN + 1, path, 0))) {
         return INIT_ERR_BUFFER_OVERFLOW();
     }
     return _PyStatus_OK();
