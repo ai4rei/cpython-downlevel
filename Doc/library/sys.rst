@@ -651,7 +651,7 @@ always available.
    the encoding used with the :term:`filesystem error handler <filesystem
    encoding and error handler>` to convert between Unicode filenames and bytes
    filenames. The filesystem error handler is returned from
-   :func:`getfilesystemencoding`.
+   :func:`getfilesystemencodeerrors`.
 
    For best compatibility, str should be used for filenames in all cases,
    although representing filenames as bytes is also supported. Functions
@@ -709,6 +709,9 @@ always available.
    higher than you might expect, because it includes the (temporary) reference as
    an argument to :func:`getrefcount`.
 
+   Note that the returned value may not actually reflect how many
+   references to the object are actually held.  Consequently, do not rely
+   on the returned value to be accurate, other than a value of 0 or 1.
 
 .. function:: getrecursionlimit()
 
