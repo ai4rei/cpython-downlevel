@@ -113,7 +113,7 @@ class WindowsConsoleIOTests(unittest.TestCase):
         temp_path = tempfile.mkdtemp()
         self.addCleanup(os_helper.rmtree, temp_path)
 
-        conout_path = os.path.join(temp_path, 'CONOUT$')
+        conout_path = os.path.join(temp_path, 'CON')
 
         with open(conout_path, 'wb', buffering=0) as f:
             # bpo-45354: Windows 11 changed MS-DOS device name handling
