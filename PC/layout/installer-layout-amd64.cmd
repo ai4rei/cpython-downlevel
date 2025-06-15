@@ -1,0 +1,1 @@
+@%~dp0..\..\PCbuild\amd64\python.exe %~dp0main.py -s D:\cpython -b D:\cpython\PCbuild\amd64 -p --arch amd64 --include-stable --include-pip --include-tcltk --include-tools --include-venv --include-dev --include-chm --include-launchers --copy C:\Python310

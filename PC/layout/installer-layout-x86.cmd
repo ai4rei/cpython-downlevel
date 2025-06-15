@@ -1,0 +1,1 @@
+@%~dp0..\..\PCbuild\win32\python.exe %~dp0main.py -s D:\cpython -b D:\cpython\PCbuild\win32 -p --arch win32 --include-stable --include-pip --include-tcltk --include-tools --include-venv --include-dev --include-chm --include-launchers --copy C:\Python310x86
