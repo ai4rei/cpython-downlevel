@@ -1368,9 +1368,9 @@ class PathFinder:
                 # Don't cache the failure as the cwd can easily change to
                 # a valid directory later on.
                 return None
-        try:
+        if path in sys.path_importer_cache:
             finder = sys.path_importer_cache[path]
-        except KeyError:
+        else:
             finder = cls._path_hooks(path)
             sys.path_importer_cache[path] = finder
         return finder
